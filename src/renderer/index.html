@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'">
+  <title>Hop — A little closer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <canvas id="aurora" aria-hidden="true"></canvas>
+  <div class="app-shell">
+    <header class="titlebar">
+      <div class="brand"><span class="brand-symbol" aria-hidden="true">h<span></span></span><span>hop</span><span class="brand-dot">.</span></div>
+      <div class="titlebar-center"><span class="live-dot"></span><span id="network-label">Getting ready</span></div>
+      <div class="titlebar-actions">
+        <div class="theme-switch" aria-label="Color theme">
+          <button data-theme="light" aria-label="Light theme" title="Light" data-icon="sun"></button>
+          <button data-theme="dark" aria-label="Dark theme" title="Dark" data-icon="moon"></button>
+          <button data-theme="auto" aria-label="Automatic theme" title="Auto" data-icon="auto"></button>
+        </div>
+        <button class="icon-button" id="settings-button" aria-label="Settings" title="Settings" data-icon="settings"></button>
+        <span class="window-controls"><button id="minimize-button" aria-label="Minimize" data-icon="minus"></button><button id="close-button" aria-label="Close window and stay available" data-icon="close"></button></span>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="nearby-panel" aria-labelledby="nearby-heading">
+        <div class="section-heading"><div><p class="eyebrow">GOOD THINGS TRAVEL LIGHT</p><h1 id="nearby-heading">One small hop.</h1><p class="intro">A file. A folder. Straight to someone nearby.</p></div><span class="nearby-count" id="nearby-count">Searching</span></div>
+        <div class="radar" id="radar" aria-label="Nearby devices">
+          <div class="radar-grid" aria-hidden="true"><div class="orbit orbit-outer"></div><div class="orbit orbit-middle"></div><div class="orbit orbit-inner"></div><div class="radar-cross horizontal"></div><div class="radar-cross vertical"></div><div class="radar-pulse"></div></div>
+          <div class="self-device"><div class="self-halo"><div class="self-face" id="self-icon"></div><span class="self-status"></span></div><strong id="self-name">This device</strong><span class="self-caption">You are here</span></div>
+          <div id="peers" aria-live="polite"></div>
+          <div class="radar-empty" id="radar-empty"><span class="search-orb"></span><span>Looking for a little company<span class="ellipsis">...</span></span><small>Open Hop on another device to get started.</small></div>
+          <div class="drop-instruction" id="drop-instruction"><span data-icon="cursor"></span>Drop files onto a device, or click to choose</div>
+          <div class="flight-layer" id="flight-layer" aria-hidden="true"></div>
+        </div>
+        <div class="radar-caption"><span data-icon="link"></span><span>Same Wi-Fi. Just the two of you.</span><button class="text-button" id="connection-help">Connection help <span aria-hidden="true">↗</span></button></div>
+      </section>
+
+      <aside class="activity-panel" aria-labelledby="activity-heading">
+        <div class="activity-heading"><h2 id="activity-heading">Activity</h2><span id="activity-count">0</span><span class="activity-line"></span><span class="tiny-label">THIS SESSION</span></div>
+        <div class="activity-content" id="activity-content">
+          <div id="offers" aria-live="polite"></div>
+          <div id="transfers" aria-live="polite"></div>
+          <div class="activity-empty" id="activity-empty">
+            <div class="empty-art" aria-hidden="true"><div class="art-orbit"></div><div class="art-paper art-back"><span></span><span></span></div><div class="art-paper art-front"><span data-icon="image"></span></div><i class="art-spark one"></i><i class="art-spark two"></i></div>
+            <h3>A little space<br>for what’s next.</h3><p>Your shared files will land here.<br>No accounts. No detours.</p>
+          </div>
+        </div>
+        <div class="local-note"><span class="local-note-icon" data-icon="direct"></span><div><strong>Made for the short trip.</strong><p>Files travel directly between devices.<br>Nothing takes a trip to the cloud.</p></div></div>
+      </aside>
+    </main>
+
+    <footer class="bottom-bar">
+      <button id="open-downloads" class="download-location" title="Open received files"><span class="folder-badge" data-icon="folder"></span><span><small>SAVE RECEIVED FILES TO</small><strong id="download-path">Downloads / Hop</strong></span></button>
+      <button id="change-downloads" class="change-button">Change<span data-icon="chevron"></span></button>
+      <span class="footer-spacer"></span><span class="background-note"><span data-icon="spark"></span>Close the window. Stay nearby.</span><button id="help-button" class="icon-button" aria-label="First launch and connection help" data-icon="help"></button>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="send-menu" id="send-menu" hidden><strong id="send-target">Send to device</strong><button id="choose-files"><span data-icon="file"></span>Choose files<span>↗</span></button><button id="choose-folder"><span data-icon="folder"></span>Choose a folder<span>↗</span></button></div>
+
+  <dialog id="settings-dialog">
+    <div class="dialog-top"><span class="eyebrow">YOUR LITTLE CORNER</span><button class="icon-button dialog-close" aria-label="Close settings" data-icon="close"></button></div>
+    <h2>Make yourself at home.</h2><p class="dialog-intro">A few things to make Hop yours.</p>
+    <label class="field-label" for="device-name">Device name</label><input id="device-name" maxlength="64" autocomplete="off" placeholder="My Mac"><p class="field-hint">This is how you appear to nearby devices.</p>
+    <div class="setting-row"><div><strong>Appearance</strong><small>A little light, or a little dark.</small></div><select id="theme-select" aria-label="Appearance"><option value="auto">Automatic</option><option value="light">Light</option><option value="dark">Dark</option></select></div>
+    <div class="setting-row trust-row"><div><strong>Always accept</strong><small id="trusted-summary">No trusted devices yet.</small></div><button id="clear-trust" class="subtle-button">Clear list</button></div>
+    <p class="field-hint">Clear the list to ask for confirmation from every device again.</p>
+    <div class="settings-bottom"><button id="open-logs" class="text-button">Open startup logs <span>↗</span></button><span id="version-label">Hop</span></div>
+    <div class="dialog-actions"><button id="quit-button" class="subtle-button">Quit Hop</button><button id="save-settings" class="primary-button">Save changes</button></div>
+  </dialog>
+
+  <dialog id="help-dialog">
+    <div class="dialog-top"><span class="eyebrow">HELLO, NEIGHBOR</span><button class="icon-button dialog-close" aria-label="Close connection help" data-icon="close"></button></div>
+    <h2>Better together.</h2><p class="dialog-intro">Open Hop on both computers, connect to the same Wi-Fi or LAN, and you’re a hop away.</p>
+    <div class="help-item"><span data-icon="mac"></span><div><strong>On your Mac</strong><p>Allow Local Network access when asked. You can change this in System Settings → Privacy &amp; Security → Local Network. Allow incoming connections if macOS Firewall asks.</p></div></div>
+    <div class="help-item"><span data-icon="windows"></span><div><strong>On your Windows PC</strong><p>Allow Hop through Windows Firewall on your private network. If you trust your downloaded build, SmartScreen’s More info → Run anyway opens an unsigned app.</p></div></div>
+    <div class="help-item"><span data-icon="wifi"></span><div><strong>Can’t see each other?</strong><p>A guest network, VPN, or router’s client isolation may block local discovery. Hop needs UDP 47800 and its local TCP port allowed.</p></div></div>
+    <div class="diagnostic" id="network-diagnostic">Starting local network service…</div>
+    <div class="dialog-actions"><button class="text-button" id="help-logs">Open logs <span>↗</span></button><button id="help-done" class="primary-button">Let’s hop <span>↗</span></button></div>
+  </dialog>
+  <script src="wave.js"></script><script src="app.js"></script>
+</body>
+</html>
