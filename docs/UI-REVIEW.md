@@ -45,3 +45,7 @@ Source inspection confirmed keyboard-focus styles, real button elements for near
 No remaining blocking UI defect was found in the inspected state. The screenshots are macOS renderer captures, not proof of native Windows caption, tray, acrylic or firewall behavior. Windows installation and physical two-computer discovery remain in the manual acceptance checklist. The final runtime results and forced Canvas capture were independently inspected after the review fixes.
 
 Electron's documented visibility behavior supports the background-throttling correction: [BrowserWindow — Page visibility](https://www.electronjs.org/docs/latest/api/browser-window#page-visibility).
+
+## v1.0.1 runtime follow-up — 2026-10-29
+
+Replaced the subtle background with a radial iridescent wave centered on the measured `.self-face` bounds. Both paths use a 2.4-second expansion (1.5× the prior 3.6-second duration). The updated smoke run passed 12 checks: captured pixel changes reach all four horizontal regions and the activity sidebar, and the mean distance of the visible light from the self icon increases in both WebGL and forced Canvas fallback. Actual renderer recordings are in `docs/images/radial-wave.gif` and `radial-wave-canvas.gif`. This follow-up records implementation validation, separately from the original independent review above.

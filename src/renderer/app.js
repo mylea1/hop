@@ -257,6 +257,7 @@
   for (const button of document.querySelectorAll('.theme-switch button')) button.addEventListener('click', () => action(async () => {
     state.settings.theme = button.dataset.theme; applyTheme(); await api.updateSettings({ theme: button.dataset.theme });
   }));
+  $('#replay-wave').addEventListener('click', () => window.hopWave?.pulse());
   $('#settings-button').addEventListener('click', () => { $('#device-name').value = state.device.name; $('#settings-dialog').showModal(); });
   for (const button of document.querySelectorAll('.dialog-close')) button.addEventListener('click', () => button.closest('dialog').close());
   $('#save-settings').addEventListener('click', () => action(async () => {
@@ -272,7 +273,7 @@
   $('#change-downloads').addEventListener('click', () => action(() => api.chooseDownloadDir()));
   for (const id of ['connection-help', 'help-button']) $(`#${id}`).addEventListener('click', () => $('#help-dialog').showModal());
   $('#help-done').addEventListener('click', () => { localStorage.setItem('hop-welcomed', 'yes'); $('#help-dialog').close(); });
-  $('#help-dialog').addEventListener('close', () => localStorage.setItem('hop-welcomed', 'yes'));
+  $('#help-dialog').addEventListener('close', () => { localStorage.setItem('hop-welcomed', 'yes'); window.hopWave?.pulse(); });
   $('#minimize-button').addEventListener('click', () => api.windowAction('minimize'));
   $('#close-button').addEventListener('click', () => api.windowAction('close'));
   $('#quit-button').addEventListener('click', () => api.windowAction('quit'));

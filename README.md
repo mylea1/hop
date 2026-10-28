@@ -8,6 +8,12 @@
 
 上图为真实 Electron 窗口截图，附近设备及示例活动由测试夹具提供；正常运行仅显示实际发现的设备。
 
+## v1.0.1 虹彩扩散
+
+光波以雷达中心的本机图标为圆心，向四周扩散。每轮 2.4 秒，比初版 3.6 秒快 1.5 倍；支持 WebGL shader 和同样径向扩散的 Canvas 回退。点击右上角星芒按钮可重播。窗口隐藏时暂停动画，系统开启减少动态效果时显示静态光晕。
+
+![实际 Electron 径向扩散录制](docs/images/radial-wave.gif)
+
 ## Windows 快速体验
 
 在 [Releases](https://github.com/mylea1/hop/releases) 下载 `Hop-windows-x64.exe`。首次标签构建完成后安装包才会出现，可在 [Actions](https://github.com/mylea1/hop/actions) 查看进度。
@@ -82,7 +88,7 @@ npm run test:ui
 
 `test:ui` 启动 Electron 做界面与主进程检查，需要本地图形桌面。自动化检查无法代替真实 Mac 与 Windows 之间的首次权限、广播可达性及安装验证，具体步骤见 [INSTALL.md](docs/INSTALL.md)。
 
-本机验证：Node 核心测试 **23/23** 通过；macOS 上真实 Electron 界面测试 **10/10** 通过，包含 3 MiB 文件哈希、后台接收、拖放桥接与 Canvas 回退。打包后的 Apple silicon 应用已验证网络启动及窗口可见。独立审查记录见 [网络审查](docs/NETWORK-REVIEW.md) 与 [UI 审查](docs/UI-REVIEW.md)。Windows 原生安装和两台实体机器之间的网络验证待实际部署完成。
+本机验证：Node 核心测试 **23/23** 通过；macOS 上真实 Electron 界面测试 **12/12** 通过，包含 3 MiB 文件哈希、后台接收、拖放桥接与 Canvas 回退。打包后的 Apple silicon 应用已验证网络启动及窗口可见。独立审查记录见 [网络审查](docs/NETWORK-REVIEW.md) 与 [UI 审查](docs/UI-REVIEW.md)。Windows 原生安装和两台实体机器之间的网络验证待实际部署完成。
 
 ## 打包
 

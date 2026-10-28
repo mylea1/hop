@@ -55,11 +55,11 @@ npm run dist:win
 git add .
 git commit -m "Build Hop local file sharing app"
 git push origin main
-git tag v1.0.0
-git push origin v1.0.0
+git tag v1.0.1
+git push origin v1.0.1
 ```
 
-版本标签必须严格等于 `v` 加 `package.json` 的版本号，例如 `1.0.0` 对应 `v1.0.0`；不一致会在打包前失败。后续发布先用 `npm version` 更新版本与 lockfile，再推送提交和标签。工作流本身只在 `v*` 标签推送时运行，不会在日常分支提交时发布。
+版本标签必须严格等于 `v` 加 `package.json` 的版本号，例如 `1.0.1` 对应 `v1.0.1`；不一致会在打包前失败。后续发布先用 `npm version` 更新版本与 lockfile，再推送提交和标签。工作流本身只在 `v*` 标签推送时运行，不会在日常分支提交时发布。
 
 GitHub 仓库需要启用 Actions，并允许工作流写入 Releases。只有 Release job 获得 `contents: write`；构建 job 使用只读权限。重新运行已有标签的工作流会更新同名 Release 资产。
 

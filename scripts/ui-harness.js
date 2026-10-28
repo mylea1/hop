@@ -22,6 +22,44 @@ async function run(ctx) {
   }
   async function click(selector) { await js('document.querySelector(' + JSON.stringify(selector) + ').click()'); await delay(90); }
   async function screenshot(name) { await delay(300); await fs.writeFile(path.join(directory, name), (await window.webContents.capturePage()).toPNG()); }
+  async function captureSweep(label) {
+    await until(() => js("document.querySelector('#aurora').dataset.active==='false'"), 'wave idle');
+    const baseline = (await window.webContents.capturePage()).resize({ width: 480 });
+    const base = baseline.toBitmap();
+    const { width, height } = baseline.getSize();
+    const changed = [0, 0, 0, 0, 0];
+    const center = await js("(()=>{const r=document.querySelector('.self-face').getBoundingClientRect();return {x:(r.left+r.width/2)/innerWidth,y:(r.top+r.height/2)/innerHeight}})()");
+    const radii = [];
+    const frames = path.join(directory, label);
+    const frameTimes = [];
+    await fs.mkdir(frames, { recursive: true });
+    await click('#replay-wave');
+    for (let n = 0; n < 25; n++) {
+      const picture = await window.webContents.capturePage();
+      frameTimes.push(Date.now());
+      await fs.writeFile(path.join(frames, String(n).padStart(2, '0') + '.png'), picture.resize({ width: 960 }).toPNG());
+      const pixels = picture.resize({ width: 480 }).toBitmap();
+      assert.equal(pixels.length, base.length);
+      const counts = [0, 0, 0, 0, 0];
+      let distance = 0, totalChanged = 0;
+      for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) {
+        const i = (y * width + x) * 4;
+        if (Math.abs(pixels[i]-base[i])+Math.abs(pixels[i+1]-base[i+1])+Math.abs(pixels[i+2]-base[i+2]) > 65) {
+          counts[Math.min(3, Math.floor(y / height * 4))]++;
+          if (x > width * .76) counts[4]++;
+          distance += Math.hypot(x-center.x*width, y-center.y*height);
+          totalChanged++;
+        }
+      }
+      counts.forEach((value, i) => { changed[i] = Math.max(changed[i], value); });
+      if (totalChanged > 300) radii.push(distance/totalChanged);
+      await delay(80);
+    }
+    assert.ok(changed.every(count => count > width * height * .008), label + ' must visibly cross all four rows AND the activity sidebar: ' + changed);
+    assert.ok(radii.length > 4 && Math.max(...radii) > Math.min(...radii)*1.8, label + ' visible light must expand away from the self icon');
+    await fs.writeFile(path.join(frames, 'timing.json'), JSON.stringify(frameTimes));
+    checks.push(label + ' expands from the self icon across the window; observed radius ' + Math.round(Math.min(...radii)) + '→' + Math.round(Math.max(...radii)) + ' px');
+  }
   try {
     await until(() => !window.webContents.isLoading(), 'renderer load');
     await until(() => js("Boolean(window.hop && document.querySelector('#self-name')?.textContent !== 'This device')"), 'bridge state');
@@ -53,6 +91,7 @@ async function run(ctx) {
     assert.equal(settings.data.theme, 'dark');
     assert.equal(await js("document.documentElement.dataset.theme"), 'dark');
     await screenshot('nearby-dark.png');
+    await captureSweep('wave-webgl-dark');
     await click('#settings-button');
     await js("document.querySelector('#device-name').value='Hop UI Test'; document.querySelector('#theme-select').value='auto'");
     await click('#save-settings');
@@ -146,6 +185,7 @@ async function run(ctx) {
     await js("document.querySelector('#aurora').dispatchEvent(new Event('webglcontextlost', {cancelable:true}))");
     await until(() => js("document.documentElement.dataset.wave==='canvas'"), 'Canvas fallback after context loss');
     await screenshot('canvas-fallback.png');
+    await captureSweep('wave-canvas-light');
     checks.push('WebGL context-loss handler switches to functioning Canvas fallback');
     assert.deepEqual(await js('window.__smokeErrors'), []);
     await outgoingReceiver.close();

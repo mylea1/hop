@@ -6,6 +6,7 @@
   "checks": [
     "Visible startup window, desktop bridge, network server, first-launch help",
     "Radar shows 3 fixtures, progress ring and activity; wave renderer=webgl",
+    "wave-webgl-dark expands from the self icon across the window; observed radius 13→336 px",
     "Light / Dark / Auto and device-name edits persist through IPC",
     "Actual HTTP folder + 3 MiB accepted through renderer checkbox/button; SHA-256 identical; trust saved",
     "Close hides window; trusted background receive renames collision; untrusted offer reopens; Decline works",
@@ -13,6 +14,7 @@
     "Disk-backed File passes preload webUtils drop bridge; transferred hash matches",
     "Change destination through UI; next trusted transfer arrives at the new directory",
     "Clear trust; native help event; minimum-size layout has no document overflow",
+    "wave-canvas-light expands from the self icon across the window; observed radius 16→285 px",
     "WebGL context-loss handler switches to functioning Canvas fallback"
   ]
 }

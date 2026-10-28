@@ -1,3 +1,10 @@
+## v1.0.1
+
+- 虹彩光波以本机图标为圆心向四周扩散，取代原有几乎不可见的背景色带。
+- 扩散速度提高到 1.5 倍，每轮 2.4 秒；WebGL 与 Canvas 回退保持相同圆心和节奏。
+- 新增右上角星芒重播按钮。窗口隐藏时暂停，减少动态效果偏好仍然生效。
+- 23 项核心测试、12 组实际 Electron 检查通过，包括两种渲染路径的画面像素及扩散半径检查。
+
 Hop lets Mac and Windows computers share files and folders directly over the same Wi-Fi or LAN.
 
 - **Apple silicon Mac:** `Hop-mac-arm64.dmg`
