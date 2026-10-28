@@ -52,7 +52,12 @@ jobs:
       - run: npm test
       - run: npm run icons
       - name: Package on native hardware
-        run: npx electron-builder --${{ matrix.platform }} ${{ matrix.target }} --${{ matrix.arch }} --publish never
+        shell: bash
+        run: |
+          for key in CSC_LINK CSC_KEY_PASSWORD APPLE_ID APPLE_APP_SPECIFIC_PASSWORD APPLE_TEAM_ID; do
+            if [[ -z "${!key}" ]]; then unset "$key"; fi
+          done
+          npx electron-builder --${{ matrix.platform }} ${{ matrix.target }} --${{ matrix.arch }} --publish never
         env:
           CSC_LINK: ${{ secrets[matrix.certificate] }}
           CSC_KEY_PASSWORD: ${{ secrets[matrix.password] }}
