@@ -91,6 +91,7 @@ jobs:
         run: |
           if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
             gh release upload "$RELEASE_TAG" release-assets/* --clobber
+            gh release edit "$RELEASE_TAG" --draft=false --title "Hop $RELEASE_TAG" --notes-file docs/RELEASE-NOTES.md
           else
             gh release create "$RELEASE_TAG" release-assets/* --verify-tag --title "Hop $RELEASE_TAG" --notes-file docs/RELEASE-NOTES.md
           fi
